@@ -1,7 +1,11 @@
+const JsonElement = require("./jsonElement");
 class JsonArray extends JsonElement {
   constructor(elements) {
     super();
     this.elements = elements || [];
+  }
+  accept(visitor) {
+    return visitor.visitJsonArray(this);
   }
 
   getType() {
@@ -13,3 +17,4 @@ class JsonArray extends JsonElement {
     return `[${jsonElements.join(", ")}]`;
   }
 }
+module.exports = JsonArray;

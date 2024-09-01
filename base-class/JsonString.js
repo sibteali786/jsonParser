@@ -1,7 +1,11 @@
+const JsonElement = require("./jsonElement");
 class JsonString extends JsonElement {
   constructor(value) {
     super();
     this.value = value;
+  }
+  accept(visitor) {
+    return visitor.visitJsonString(this);
   }
 
   getType() {
@@ -12,3 +16,4 @@ class JsonString extends JsonElement {
     return `"${this.value}"`;
   }
 }
+module.exports = JsonString;

@@ -1,7 +1,11 @@
+const JsonElement = require("./jsonElement");
 class JsonObject extends JsonElement {
   constructor(pairs) {
     super();
     this.pairs = pairs || {};
+  }
+  accept(visitor) {
+    return visitor.visitJsonObject(this);
   }
 
   getType() {
@@ -15,3 +19,4 @@ class JsonObject extends JsonElement {
     return `{${jsonPairs.join(", ")}}`;
   }
 }
+module.exports = JsonObject;

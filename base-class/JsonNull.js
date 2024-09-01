@@ -1,6 +1,10 @@
+const JsonElement = require("./jsonElement");
 class JsonNull extends JsonElement {
   constructor() {
     super();
+  }
+  accept(visitor) {
+    return visitor.visitJsonNull(this);
   }
 
   getType() {
@@ -11,3 +15,4 @@ class JsonNull extends JsonElement {
     return "null";
   }
 }
+module.exports = JsonNull;

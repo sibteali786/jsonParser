@@ -1,7 +1,11 @@
+const JsonElement = require("./jsonElement");
 class JsonBoolean extends JsonElement {
   constructor(value) {
     super();
     this.value = value;
+  }
+  accept(visitor) {
+    return visitor.visitJsonBoolean(this);
   }
 
   getType() {
@@ -12,3 +16,4 @@ class JsonBoolean extends JsonElement {
     return this.value.toString();
   }
 }
+module.exports = JsonBoolean;

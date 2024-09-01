@@ -48,7 +48,12 @@ const script = (classes) => {
     let code = defineType(className, fields, methods);
 
     // Format the generated code with Prettier
-    code = await prettier.format(code, { parser: "babel" });
+    // Format the generated code with Prettier
+    try {
+      code = await prettier.format(code, { parser: "babel" });
+    } catch (err) {
+      console.error(`Prettier failed for ${className}.js:`, err);
+    }
 
     // Write the formatted code to a file
     fs.writeFileSync(path.join(dir, `${className}.js`), code);
@@ -66,12 +71,17 @@ function defineType(name, fields, methods) {
     JsonNull: "null",
   };
 
-  let code = `class ${name} extends JsonElement {
+  let code = `const JsonElement = require("./jsonElement");\n`;
+
+  code += `class ${name} extends JsonElement {
     constructor(${name === "JsonNull" ? "" : fields}) {
       super();
       ${name === "JsonObject" ? `this.${fields} = ${fields} || {};` : name === "JsonArray" ? `this.${fields} = ${fields} || [];` : name !== "JsonNull" ? `this.${fields} = ${fields};` : ""}
     }\n`;
-
+  // handling accept method of visitor interface
+  code += `accept(visitor){
+  	return visitor.visit${name}(this);
+  }\n`;
   methods.forEach((method) => {
     if (method === "getType") {
       code += `\n  getType() {
@@ -114,6 +124,7 @@ function defineType(name, fields, methods) {
 
   code += `}\n`;
 
+  code += `module.exports = ${name}`;
   return code;
 }
 
